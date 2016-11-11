@@ -14,8 +14,10 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import Mock from 'mockjs';
 import request from '../common/request';
-import config from '../common/config';
+import config from '../common/config'; 
 var width =Dimensions.get('window').width//获取屏幕宽度
+var Detail = require('./detail')
+
 //申明缓存
 var cachedResults = {
   nextPage:1,//页数
@@ -43,7 +45,7 @@ var Item = React.createClass({
       up:up ? 'yes' : 'no',
       accessToken : 'abce'
     }
-
+    //点赞请求
     request.post(url,body)
       .then(function(data){
         if(data.success){
@@ -62,7 +64,7 @@ var Item = React.createClass({
     var row = this.state.row
     return(
        //透明点击层
-      <TouchableHighlight >
+      <TouchableHighlight onPress={this.props.onSelect} >
         <View style={styles.item}>
           <Text style={styles.title}>{row.title}</Text>
           <Image
@@ -110,7 +112,10 @@ var List = React.createClass({
   },
 
   _renderRow(row){
-    return <Item row={row}/>
+    return <Item 
+      key={row._id} 
+      onSelect= {()=>this._loadPage(row)} 
+      row={row} />
   },
 
   componentDidMount(){//组件加载完之后请求数据
@@ -209,6 +214,15 @@ var List = React.createClass({
       return <View style={styles.loadingMore}/>
     }
     return  <ActivityIndicator style={styles.loadingMore}/> 
+  },
+  _loadPage(row){//打开详情页
+    this.props.navigator.push({//压栈操作
+      name:'detail',
+      component: Detail,
+      params:{
+        row:row
+      }
+    })
   },
 
 	render(){

@@ -11,7 +11,8 @@
   StyleSheet,  
   Text,  
   View,  
-  Image,  
+  Image,
+  Navigator,
 } from 'react-native';  
 
 //引入tabbar支持包  
@@ -67,9 +68,19 @@ class AwesomeProject extends Component {
           selected={this.state.selectedTab==='list'}  
           selectedTitleStyle={{color:'#f85959'}}  
           onPress={()=>this.onPress('list')}> 
-          <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-            <List/>
-          </View> 
+          <Navigator
+            initialRoute={{ //初始化list
+              name:'list',
+              component:List
+            }}
+            configureScene={(route)=>{
+              return Navigator.SceneConfigs.FloatFromRight
+            }}
+            renderScene={(route,navigator)=>{//route传进renderScene
+              var Component = route.component//获取List组件return 出去
+              return <Component {...route.params} navigator={navigator} //navigator传到List 相当于props
+                />
+            }} />
         </TabNavigatorItem>
 
         <TabNavigatorItem  
