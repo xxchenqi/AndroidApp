@@ -220,7 +220,7 @@ var List = React.createClass({
       name:'detail',
       component: Detail,
       params:{
-        row:row
+        data:row
       }
     })
   },
